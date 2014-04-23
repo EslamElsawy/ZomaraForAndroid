@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/logoutbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="235dp"
+        android:layout_y="4dp"
+        android:onClick="onLogoutButtonClicked"
+        android:text="LogOut" />
+
+    <com.facebook.widget.ProfilePictureView
+        android:id="@+id/selection_profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="22dp"
+        android:layout_y="54dp"
+        android:gravity="center_horizontal" >
+    </com.facebook.widget.ProfilePictureView>
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_x="156dp"
+        android:layout_y="74dp"
+        android:text="Output"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ListView
+        android:id="@+id/mylistview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_x="8dp"
+        android:layout_y="167dp" >
+    </ListView>
+
+</AbsoluteLayout>
