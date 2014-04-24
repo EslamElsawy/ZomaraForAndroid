@@ -69,7 +69,6 @@ public class UserFriendsActivity extends Activity {
 				ParseFacebookUtils.getSession(),
 				new Request.GraphUserListCallback() {
 
-					TextView label = (TextView) findViewById(R.id.label);
 					ListView listView = (ListView) findViewById(R.id.mylistview);
 					List<BaseListElement> listElements = new ArrayList<BaseListElement>();
 
@@ -120,6 +119,7 @@ public class UserFriendsActivity extends Activity {
 
 			BaseListElement listElement = listElements.get(position);
 			if (listElement != null) {
+				
 				// view.setOnClickListener(listElement.getOnClickListener());
 				// alarm button
 				Button alarmButton = (Button) view.findViewById(R.id.alarmbutton);
@@ -130,7 +130,7 @@ public class UserFriendsActivity extends Activity {
 				alarmButton.setTag(R.string.fromUser,ParseUser.getCurrentUser().get("facebookName"));
 				alarmButton.setTag(R.string.toUser,listElement.getText1());
 
-				// provile picture and text
+				// profile picture and text
 				ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.icon);
 				TextView text1 = (TextView) view.findViewById(R.id.text1);
 				TextView text2 = (TextView) view.findViewById(R.id.text2);
@@ -167,6 +167,7 @@ public class UserFriendsActivity extends Activity {
 					Log.d(FRIENDS_ACTIVITY, (String) view.getTag(R.string.fromUser));
 					Log.d(FRIENDS_ACTIVITY, (String) view.getTag(R.string.toUser));
 					
+					//Save notifiction to Parse
 					ParseObject notification = new ParseObject("Notification");
 					notification.put("fromId", (String) view.getTag(R.string.fromId));
 					notification.put("toId", (String) view.getTag(R.string.toId));

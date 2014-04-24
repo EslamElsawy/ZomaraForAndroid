@@ -96,7 +96,10 @@ public class MainActivity extends Activity {
 							currentUser.put("facebookLink", user.getLink());
 							currentUser.saveInBackground();
 
-							// save push installation
+							/*
+							 * ParseInstllation is required for push notification
+							 * (Not Completed - Not Functioning Well)
+							 */
 							PushService.setDefaultPushCallback(
 									getBaseContext(), MainActivity.class);
 							ParseInstallation parseInstallation = ParseInstallation

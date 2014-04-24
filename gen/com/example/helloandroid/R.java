@@ -220,8 +220,8 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020020;
     }
     public static final class id {
-        public static final int action_settings=0x7f040022;
-        public static final int alarmbutton=0x7f040021;
+        public static final int action_settings=0x7f04001f;
+        public static final int alarmbutton=0x7f04001e;
         public static final int com_facebook_login_activity_progress_bar=0x7f040007;
         public static final int com_facebook_picker_activity_circle=0x7f040006;
         public static final int com_facebook_picker_checkbox=0x7f040009;
@@ -243,18 +243,15 @@ containing a value of this type.
         public static final int com_facebook_usersettingsfragment_logo_image=0x7f040017;
         public static final int com_facebook_usersettingsfragment_profile_name=0x7f040018;
         public static final int container=0x7f040003;
-        public static final int icon=0x7f04001e;
-        public static final int label=0x7f04001c;
+        public static final int icon=0x7f04001b;
         public static final int large=0x7f040002;
         public static final int loginbutton=0x7f040004;
-        public static final int logoutbutton=0x7f04001a;
-        public static final int mylistview=0x7f04001d;
+        public static final int mylistview=0x7f04001a;
         public static final int normal=0x7f040001;
         public static final int picker_subtitle=0x7f040014;
-        public static final int selection_profile_pic=0x7f04001b;
         public static final int small=0x7f040000;
-        public static final int text1=0x7f04001f;
-        public static final int text2=0x7f040020;
+        public static final int text1=0x7f04001c;
+        public static final int text2=0x7f04001d;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
