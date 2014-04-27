@@ -15,6 +15,7 @@
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="80dp"
         android:text="test"
         android:textColor="#333"
@@ -24,9 +25,11 @@
         android:id="@+id/alarmbutton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="right"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="250dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:contentDescription="alarm"
         android:src="@drawable/alarm" />
 
 </FrameLayout>
