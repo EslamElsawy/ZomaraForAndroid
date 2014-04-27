@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
+import com.parse.SaveCallback;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -48,33 +50,32 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		// auto generated code
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			getFragmentManager().beginTransaction().add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
 	}
 
 	public void onLogInButtonClicked(View v) {
-		List<String> permissions = Arrays.asList("basic_info", "user_about_me",
-				"user_relationships", "user_birthday", "user_location");
+
+		List<String> permissions = Arrays.asList("basic_info", "user_about_me", "user_relationships", "user_birthday",
+				"user_location");
 
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 			@Override
 			public void done(ParseUser user, ParseException err) {
 				if (user == null) {
-					Log.d(MAIN_ACTIVITY,
-							"The user cancelled the Facebook login.");
+					Log.d(MAIN_ACTIVITY, err.getMessage());
+					Log.d(MAIN_ACTIVITY, "The user cancelled the Facebook login.");
 				} else if (user.isNew()) {
-					Log.d(MAIN_ACTIVITY,
-							"User signed up and logged in through Facebook!"
-									+ user.getUsername());
+					Log.d(MAIN_ACTIVITY, "User signed up and logged in through Facebook!" + user.getUsername());
 					makeMeRequest();
 					startFriendsActivity();
 				} else {
-					Log.d(MAIN_ACTIVITY, "User logged in through Facebook!"
-							+ user.getUsername());
+					Log.d(MAIN_ACTIVITY, "User logged in through Facebook!" + user.getUsername());
+					makeMeRequest();
 					startFriendsActivity();
 				}
 			}
@@ -83,46 +84,53 @@ public class MainActivity extends Activity {
 
 	private void makeMeRequest() {
 		// create request
-		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
-				new Request.GraphUserCallback() {
-					@Override
-					public void onCompleted(GraphUser user, Response response) {
-						if (user != null) {
-							ParseUser currentUser = ParseUser.getCurrentUser();
-							currentUser.put("facebookId", user.getId());
-							currentUser.put("facebookName", user.getName());
-							currentUser.put("facebookUsername",
-									user.getUsername());
-							currentUser.put("facebookLink", user.getLink());
-							currentUser.saveInBackground();
+		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(), new Request.GraphUserCallback() {
+			@Override
+			public void onCompleted(GraphUser user, Response response) {
+				if (user != null) {
+					Log.d(MAIN_ACTIVITY, "Start adding fields to ParseUser");
+					ParseUser currentUser = ParseUser.getCurrentUser();
+					currentUser.put("facebookId", user.getId());
+					currentUser.put("facebookName", user.getName());
+					currentUser.put("facebookUsername", user.getUsername()+"");
+					currentUser.put("facebookLink", user.getLink());
+					currentUser.saveInBackground();
+					Log.d(MAIN_ACTIVITY, "end adding fields to ParseUser");
 
-							/*
-							 * ParseInstllation is required for push notification
-							 * (Not Completed - Not Functioning Well)
-							 */
-							PushService.setDefaultPushCallback(
-									getBaseContext(), MainActivity.class);
-							ParseInstallation parseInstallation = ParseInstallation
-									.getCurrentInstallation();
+					// Subscribe for push notification
+					subscribe(user);
 
-							parseInstallation.add("facebookId", user.getId());
-							parseInstallation.add("facebookName",
-									user.getName());
-							parseInstallation.add("facebookUsername",
-									user.getUsername());
-							// PushService.subscribe(getBaseContext(),
-							// user.getId(), MainActivity.class);
-							parseInstallation.addAllUnique("channels",
-									Arrays.asList(user.getId()));
-							parseInstallation.saveInBackground();
-							ParseInstallation.getCurrentInstallation()
-									.saveInBackground();
-							Set<String> setOfAllSubscriptions = PushService
-									.getSubscriptions(getBaseContext());
-							System.err.println(setOfAllSubscriptions);
+					// Notify my friends
+
+				}
+			}
+
+			private void subscribe(GraphUser user) {
+
+				Log.d(MAIN_ACTIVITY, "Start adding fields to parseInstallation");
+				ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
+
+				parseInstallation.put("facebookId", user.getId());
+				parseInstallation.put("facebookName", user.getName());
+				parseInstallation.put("facebookUsername", user.getUsername()+"");
+				PushService.subscribe(getApplicationContext(), "user" + user.getId(), UserFriendsActivity.class);
+
+				Log.d(MAIN_ACTIVITY, (String) parseInstallation.get("facebookId"));
+
+				parseInstallation.saveInBackground(new SaveCallback() {
+					public void done(ParseException e) {
+						if (e == null) {
+							Log.d(MAIN_ACTIVITY, "succesfully saved parseInstallation");
+						} else {
+							Log.d(MAIN_ACTIVITY, "failed to save parseInstallation");
+							e.printStackTrace();
 						}
 					}
 				});
+				Log.d(MAIN_ACTIVITY, "end adding fields to ParseUser");
+
+			}
+		});
 
 		// excute request
 		request.executeAsync();
@@ -162,10 +170,8 @@ public class MainActivity extends Activity {
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 			return rootView;
 		}
 	}
