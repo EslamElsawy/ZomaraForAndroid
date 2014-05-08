@@ -1,8 +1,11 @@
 package com.example.helloandroid;
 
-import java.math.MathContext;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 import org.json.JSONException;
@@ -11,18 +14,19 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -31,11 +35,12 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.PushService;
+import com.parse.SaveCallback;
 
 public class UserFriendsActivity extends Activity {
 
@@ -47,7 +52,6 @@ public class UserFriendsActivity extends Activity {
 		setContentView(R.layout.friends_activity);
 
 		// Fetch Facebook user friends if the session is active
-		List<BaseListElement> listElements = null;
 		Session session = ParseFacebookUtils.getSession();
 		if (session != null && session.isOpened()) {
 			Log.d(FRIENDS_ACTIVITY, "Sesion is not null");
@@ -143,15 +147,23 @@ public class UserFriendsActivity extends Activity {
 			BaseListElement listElement = listElements.get(position);
 			if (listElement != null) {
 
-				// view.setOnClickListener(listElement.getOnClickListener());
-				// alarm button
+				// Alarm button
 				ImageView alarmButton = (ImageView) view.findViewById(R.id.alarmbutton);
-				alarmButton.setOnClickListener(listElement.getOnClickListener());
+				alarmButton.setOnClickListener(listElement.getOnAlarmClickListener());
 
 				alarmButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
 				alarmButton.setTag(R.string.toId, listElement.getID());
 				alarmButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
 				alarmButton.setTag(R.string.toUser, listElement.getText1());
+
+				// Mic button
+				ImageView micButton = (ImageView) view.findViewById(R.id.mic);
+				micButton.setOnClickListener(listElement.getOnMicClickListener());
+
+				micButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
+				micButton.setTag(R.string.toId, listElement.getID());
+				micButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
+				micButton.setTag(R.string.toUser, listElement.getText1());
 
 				// profile picture and text
 				ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.profilepicture);
@@ -180,11 +192,11 @@ public class UserFriendsActivity extends Activity {
 		}
 
 		@Override
-		protected View.OnClickListener getOnClickListener() {
+		protected View.OnClickListener getOnAlarmClickListener() {
 			return new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					Log.d(FRIENDS_ACTIVITY, "Click !!!");
+					Log.d(FRIENDS_ACTIVITY, "Alarm !!!");
 					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.fromId)) + "");
 					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.toId)) + "");
 					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.fromUser)) + "");
@@ -196,24 +208,155 @@ public class UserFriendsActivity extends Activity {
 					notification.put("toId", (String) view.getTag(R.string.toId));
 					notification.put("fromUser", ((String) view.getTag(R.string.fromUser)) + "");
 					notification.put("toUser", (String) view.getTag(R.string.toUser));
+					notification.put("type", "alarm");
 					notification.saveInBackground();
 
-					// send push notification
+					// Send push notification
 					ParsePush push = new ParsePush();
 					JSONObject data = null;
 					try {
 						data = new JSONObject("{  \"action\": \"com.example.helloandroid.UPDATE_STATUS\", "
-								+ "\"name\": \"tempname\"," + "\"newsItem\": \"tempNewsItem\"  }");
+								+ "\"type\": \"alarm\"," + "\"fromId\": \"" + ((String) view.getTag(R.string.fromId))
+								+ "\"," + "\"fromUser\": \"" + ((String) view.getTag(R.string.fromUser)) + "\" }");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-
 					push.setChannel("user" + (String) view.getTag(R.string.toId));
-					// push.setMessage("Hello World From emulator");
+					push.setData(data);
+					push.sendInBackground();
+
+					// testing message
+					Toast toast = Toast.makeText(getApplicationContext(),
+							"Sending Alarm to " + (String) view.getTag(R.string.toUser), Toast.LENGTH_LONG);
+					toast.show();
+				}
+			};
+		}
+
+		// Voice recording feature
+		boolean mStartRecording = true;
+		private static final String LOG_TAG = "AudioRecordTest";
+		private MediaRecorder mRecorder = null;
+		private String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/audiorecordtest.3gp";
+
+		@Override
+		protected OnClickListener getOnMicClickListener() {
+			return new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Log.d(FRIENDS_ACTIVITY, "Mic !!!");
+					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.fromId)) + "");
+					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.toId)) + "");
+					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.fromUser)) + "");
+					Log.d(FRIENDS_ACTIVITY, ((String) view.getTag(R.string.toUser)) + "");
+
+					// start recording
+					onRecord(mStartRecording, view);
+					if (mStartRecording) {
+						Log.d(LOG_TAG, "Start recording");
+						ImageView micButton = (ImageView) view.findViewById(R.id.mic);
+						micButton.setImageResource(R.drawable.stop);
+					} else {
+						Log.d(LOG_TAG, "Stop recording");
+						ImageView micButton = (ImageView) view.findViewById(R.id.mic);
+						micButton.setImageResource(R.drawable.mic);
+					}
+					mStartRecording = !mStartRecording;
+
+				}
+			};
+		}
+
+		private void onRecord(boolean start, View view) {
+			if (start) {
+				startRecording();
+			} else {
+				stopRecording(view);
+			}
+		}
+
+		private void startRecording() {
+			mRecorder = new MediaRecorder();
+			mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+			mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+			mRecorder.setOutputFile(fileName);
+			mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+			try {
+				mRecorder.prepare();
+			} catch (IOException e) {
+				Log.e(LOG_TAG, "prepare() failed");
+			}
+			mRecorder.start();
+		}
+
+		private void stopRecording(View view) {
+			mRecorder.stop();
+			mRecorder.release();
+			mRecorder = null;
+
+			sendVoice(view);
+		}
+
+		private void sendVoice(final View view) {
+			Log.d(LOG_TAG, "Start sending");
+
+			// Reading saved audio from SD card
+			File fileInput = new File(fileName);
+			int size = (int) fileInput.length();
+			byte[] byteArray = new byte[size];
+			try {
+				BufferedInputStream buf = new BufferedInputStream(new FileInputStream(fileInput));
+				buf.read(byteArray, 0, byteArray.length);
+				buf.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			// Don't Send Large Voice files > 25KB
+			if ((byteArray.length / 1000) > 25) {
+				Toast toast = Toast.makeText(getApplicationContext(),
+						"Sorry Can't send voice files with size larger than 10KB \n Your file is "
+								+ (byteArray.length / 1000) + " KB", Toast.LENGTH_LONG);
+				toast.show();
+				return;
+			}
+
+			// Testing message
+			Toast toast = Toast.makeText(getApplicationContext(), "Sending Voice of Size " + (byteArray.length / 1000)
+					+ " KB to " + (String) view.getTag(R.string.toUser), Toast.LENGTH_LONG);
+			toast.show();
+
+			// Save Notification to parse with the voice
+			ParseObject notification = new ParseObject("Notification");
+			notification.put("fromId", ((String) view.getTag(R.string.fromId)) + "");
+			notification.put("toId", (String) view.getTag(R.string.toId));
+			notification.put("fromUser", ((String) view.getTag(R.string.fromUser)) + "");
+			notification.put("toUser", (String) view.getTag(R.string.toUser));
+			notification.put("type", "voice");
+			ParseFile file = new ParseFile("voice.3gp", byteArray);
+			notification.put("file", file);
+			notification.saveInBackground(new SaveCallback() {
+				@Override
+				public void done(ParseException arg0) {
+
+					// Send push notification to the receiver to start download
+					// the voice
+					ParsePush push = new ParsePush();
+					JSONObject data = null;
+					try {
+						data = new JSONObject("{  \"action\": \"com.example.helloandroid.UPDATE_STATUS\", "
+								+ "\"type\": \"voice\"," + "\"fromId\": \"" + ((String) view.getTag(R.string.fromId))
+								+ "\"," + "\"fromUser\": \"" + ((String) view.getTag(R.string.fromUser)) + "\"  }");
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					push.setChannel("user" + (String) view.getTag(R.string.toId));
 					push.setData(data);
 					push.sendInBackground();
 				}
-			};
+			});
 		}
 	}
 

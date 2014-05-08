@@ -11,7 +11,8 @@ public abstract class BaseListElement {
 	private int requestCode;
 	private BaseAdapter adapter;
 
-	protected abstract View.OnClickListener getOnClickListener();
+	protected abstract View.OnClickListener getOnAlarmClickListener();
+	protected abstract View.OnClickListener getOnMicClickListener();
 
 	public BaseListElement(String id, String text1, String text2,
 			int requestCode) {

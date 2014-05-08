@@ -4,9 +4,11 @@
     <string name="app_name">Hello Android</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-	<string name="app_id"> 646756708723855</string>
-	<string name= "fromId"> 1</string>
-	<string name= "toId"> 2</string>
-	<string name= "fromUser"> 3</string>
-	<string name= "toUser"> 4</string>
+    <string name="app_id"> 646756708723855</string>
+    <string name="fromId"> 1</string>
+    <string name="toId"> 2</string>
+    <string name="fromUser"> 3</string>
+    <string name="toUser"> 4</string>
+    <string name="title_activity_audio_record">AudioRecord</string>
+
 </resources>

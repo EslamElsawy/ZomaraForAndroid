@@ -202,7 +202,7 @@ containing a value of this type.
         public static final int com_facebook_list_section_header_background=0x7f02000f;
         public static final int com_facebook_loginbutton_silver=0x7f020010;
         public static final int com_facebook_logo=0x7f020011;
-        public static final int com_facebook_picker_default_separator_color=0x7f020026;
+        public static final int com_facebook_picker_default_separator_color=0x7f02002b;
         public static final int com_facebook_picker_item_background=0x7f020012;
         public static final int com_facebook_picker_list_focused=0x7f020013;
         public static final int com_facebook_picker_list_longpressed=0x7f020014;
@@ -223,9 +223,14 @@ containing a value of this type.
         public static final int facebook_icon=0x7f020023;
         public static final int ic_launcher=0x7f020024;
         public static final int logo=0x7f020025;
+        public static final int mic=0x7f020026;
+        public static final int pause=0x7f020027;
+        public static final int play=0x7f020028;
+        public static final int send=0x7f020029;
+        public static final int stop=0x7f02002a;
     }
     public static final class id {
-        public static final int action_settings=0x7f050021;
+        public static final int action_settings=0x7f050022;
         public static final int alarmbutton=0x7f050020;
         public static final int com_facebook_login_activity_progress_bar=0x7f05000a;
         public static final int com_facebook_picker_activity_circle=0x7f050009;
@@ -253,6 +258,7 @@ containing a value of this type.
         public static final int imageView3=0x7f050006;
         public static final int imageView4=0x7f050007;
         public static final int large=0x7f050002;
+        public static final int mic=0x7f050021;
         public static final int mylistview=0x7f05001d;
         public static final int normal=0x7f050001;
         public static final int picker_subtitle=0x7f050017;
@@ -281,10 +287,12 @@ containing a value of this type.
         public static final int listitem=0x7f030011;
     }
     public static final class menu {
-        public static final int main=0x7f0a0000;
+        public static final int audio_record=0x7f0a0000;
+        public static final int main=0x7f0a0001;
     }
     public static final class raw {
         public static final int alarm=0x7f040000;
+        public static final int bell=0x7f040001;
     }
     public static final class string {
         public static final int action_settings=0x7f08001b;
@@ -318,6 +326,7 @@ containing a value of this type.
         public static final int fromId=0x7f08001d;
         public static final int fromUser=0x7f08001f;
         public static final int hello_world=0x7f08001a;
+        public static final int title_activity_audio_record=0x7f080021;
         public static final int toId=0x7f08001e;
         public static final int toUser=0x7f080020;
     }
