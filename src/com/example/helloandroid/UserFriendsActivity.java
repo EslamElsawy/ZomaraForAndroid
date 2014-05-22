@@ -22,9 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +62,7 @@ public class UserFriendsActivity extends Activity {
 		} else {
 			Log.d(FRIENDS_ACTIVITY, "Sesion is not null");
 		}
+
 	}
 
 	public void onLogoutButtonClicked(View v) {
@@ -81,7 +85,7 @@ public class UserFriendsActivity extends Activity {
 		Request request = Request.newMyFriendsRequest(ParseFacebookUtils.getSession(),
 				new Request.GraphUserListCallback() {
 
-					ListView listView = (ListView) findViewById(R.id.mylistview);
+					GridView gridview = (GridView) findViewById(R.id.gridview);
 					List<BaseListElement> listElements = new ArrayList<BaseListElement>();
 
 					@Override
@@ -110,79 +114,12 @@ public class UserFriendsActivity extends Activity {
 							e.printStackTrace();
 						}
 
-						listView.setAdapter(new ActionListAdapter(UserFriendsActivity.this, R.id.mylistview,
-								listElements));
+						gridview.setAdapter(new ImageAdapter(UserFriendsActivity.this, listElements));
 					}
 				});
 
 		// excute request
 		request.executeAsync();
-	}
-
-	private class ActionListAdapter extends ArrayAdapter<BaseListElement> {
-		private List<BaseListElement> listElements;
-
-		public ActionListAdapter(Context context, int resourceId, List<BaseListElement> listElements) {
-			super(context, resourceId, listElements);
-			this.listElements = listElements;
-			// Set up as an observer for list item changes to
-			// refresh the view.
-			for (int i = 0; i < listElements.size(); i++) {
-				listElements.get(i).setAdapter(this);
-			}
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			// prepare view
-			View view = convertView;
-			if (view == null) {
-				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
-						Context.LAYOUT_INFLATER_SERVICE);
-				view = inflater.inflate(R.layout.listitem, parent, false);
-			}
-
-			// fill view with data
-			BaseListElement listElement = listElements.get(position);
-			if (listElement != null) {
-
-				// Alarm button
-				ImageView alarmButton = (ImageView) view.findViewById(R.id.alarmbutton);
-				alarmButton.setOnClickListener(listElement.getOnAlarmClickListener());
-
-				alarmButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
-				alarmButton.setTag(R.string.toId, listElement.getID());
-				alarmButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
-				alarmButton.setTag(R.string.toUser, listElement.getText1());
-
-				// Mic button
-				ImageView micButton = (ImageView) view.findViewById(R.id.mic);
-				micButton.setOnClickListener(listElement.getOnMicClickListener());
-
-				micButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
-				micButton.setTag(R.string.toId, listElement.getID());
-				micButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
-				micButton.setTag(R.string.toUser, listElement.getText1());
-
-				// profile picture and text
-				ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.profilepicture);
-				TextView text1 = (TextView) view.findViewById(R.id.text1);
-				// TextView text2 = (TextView) view.findViewById(R.id.text2);
-
-				if (text1 != null) {
-					text1.setText(listElement.getText1());
-				}
-				// if (text2 != null) {
-				// text2.setText(listElement.getText2());
-				// }
-				if (profilePictureView != null) {
-					profilePictureView.setProfileId(listElement.getID());
-				}
-			}
-			return view;
-		}
-
 	}
 
 	private class PeopleListElement extends BaseListElement {
@@ -259,7 +196,7 @@ public class UserFriendsActivity extends Activity {
 					} else {
 						Log.d(LOG_TAG, "Stop recording");
 						ImageView micButton = (ImageView) view.findViewById(R.id.mic);
-						micButton.setImageResource(R.drawable.mic);
+						micButton.setImageResource(R.drawable.voice_icon);
 					}
 					mStartRecording = !mStartRecording;
 
@@ -314,8 +251,8 @@ public class UserFriendsActivity extends Activity {
 				e.printStackTrace();
 			}
 
-			// Don't Send Large Voice files > 25KB
-			if ((byteArray.length / 1000) > 25) {
+			// Don't Send Large Voice files > 50KB
+			if ((byteArray.length / 1000) > 50) {
 				Toast toast = Toast.makeText(getApplicationContext(),
 						"Sorry Can't send voice files with size larger than 10KB \n Your file is "
 								+ (byteArray.length / 1000) + " KB", Toast.LENGTH_LONG);
@@ -360,4 +297,75 @@ public class UserFriendsActivity extends Activity {
 		}
 	}
 
+	public class ImageAdapter extends BaseAdapter {
+		private Context mContext;
+		private List<BaseListElement> listElements;
+
+		public ImageAdapter(Context c, List<BaseListElement> elements) {
+			mContext = c;
+			listElements = elements;
+		}
+
+		public int getCount() {
+			return listElements.size();
+		}
+
+		public Object getItem(int position) {
+			return null;
+		}
+
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		// create a new ImageView for each item referenced by the Adapter
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// prepare view
+			View view = convertView;
+			if (view == null) {
+				LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(R.layout.listitem, parent, false);
+			}
+
+			// fill view with data
+			BaseListElement listElement = listElements.get(position);
+			if (listElement != null) {
+
+				// Alarm button
+				ImageView alarmButton = (ImageView) view.findViewById(R.id.alarmbutton);
+				alarmButton.setOnClickListener(listElement.getOnAlarmClickListener());
+
+				alarmButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
+				alarmButton.setTag(R.string.toId, listElement.getID());
+				alarmButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
+				alarmButton.setTag(R.string.toUser, listElement.getText1());
+
+				// Mic button
+				ImageView micButton = (ImageView) view.findViewById(R.id.mic);
+				micButton.setOnClickListener(listElement.getOnMicClickListener());
+
+				micButton.setTag(R.string.fromId, ParseUser.getCurrentUser().get("facebookId"));
+				micButton.setTag(R.string.toId, listElement.getID());
+				micButton.setTag(R.string.fromUser, ParseUser.getCurrentUser().get("facebookName"));
+				micButton.setTag(R.string.toUser, listElement.getText1());
+
+				// profile picture and text
+				ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.profilepicture);
+				TextView text1 = (TextView) view.findViewById(R.id.text1);
+				// TextView text2 = (TextView) view.findViewById(R.id.text2);
+
+				if (text1 != null) {
+					text1.setText(listElement.getText1());
+				}
+				// if (text2 != null) {
+				// text2.setText(listElement.getText2());
+				// }
+				if (profilePictureView != null) {
+					profilePictureView.setProfileId(listElement.getID());
+				}
+			}
+			return view;
+		}
+	}
 }

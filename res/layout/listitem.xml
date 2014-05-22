@@ -9,38 +9,38 @@
         android:id="@+id/profilepicture"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginLeft="10dp" />
-
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="80dp"
-        android:text="test"
-        android:textColor="#333"
-        android:textSize="18sp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="0dp" />
 
     <ImageView
         android:id="@+id/alarmbutton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="270dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center_horizontal"
         android:contentDescription="alarm"
-        android:src="@drawable/alarm" />
+        android:src="@drawable/alarm_icon" />
 
     <ImageView
         android:id="@+id/mic"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="230dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="80dp"
+        android:layout_gravity="center_horizontal"
         android:contentDescription="mic"
-        android:src="@drawable/mic" />
+        android:src="@drawable/voice_icon" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="63dp"
+        android:text="test"
+        android:textColor="#fff"
+        android:textSize="10sp" />
 
 </FrameLayout>
