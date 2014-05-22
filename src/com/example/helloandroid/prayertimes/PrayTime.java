@@ -22,7 +22,7 @@ PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.
 
 */
 
-package com.example.helloandroid;
+package com.example.helloandroid.prayertimes;
 
 
 

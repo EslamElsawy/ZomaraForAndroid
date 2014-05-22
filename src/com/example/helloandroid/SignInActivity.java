@@ -1,18 +1,11 @@
 package com.example.helloandroid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,35 +14,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
 import com.parse.SaveCallback;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.widget.Button;
-import android.widget.TextView;
+public class SignInActivity extends Activity {
 
-import com.facebook.*;
-import com.facebook.model.*;
-
-public class MainActivity extends Activity {
-
-	private static final String MAIN_ACTIVITY = "MainActivity";
+	private static final String MAIN_ACTIVITY = "SignInActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_sign_in);
 
 		// auto generated code
 		if (savedInstanceState == null) {
@@ -113,7 +96,7 @@ public class MainActivity extends Activity {
 				parseInstallation.put("facebookId", user.getId());
 				parseInstallation.put("facebookName", user.getName());
 				parseInstallation.put("facebookUsername", user.getUsername()+"");
-				PushService.subscribe(getApplicationContext(), "user" + user.getId(), UserFriendsActivity.class);
+				PushService.subscribe(getApplicationContext(), "user" + user.getId(), HelpActivity.class);
 
 				Log.d(MAIN_ACTIVITY, (String) parseInstallation.get("facebookId"));
 
@@ -137,7 +120,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void startFriendsActivity() {
-		Intent intent = new Intent(this, UserFriendsActivity.class);
+		Intent intent = new Intent(this, HelpActivity.class);
 		startActivity(intent);
 	}
 
@@ -185,26 +168,4 @@ public class MainActivity extends Activity {
 	}
 
 }
-
-// push notification
-
-// PushService.setDefaultPushCallback(this, MainActivity.class);
-// ParseInstallation.getCurrentInstallation().saveInBackground(); Set<String>
-// setOfAllSubscriptions = PushService .getSubscriptions(getBaseContext());
-// System.err.println(setOfAllSubscriptions);
-//
-// // build json object JSONObject mainObj = null; try { JSONObject jo = new
-// JSONObject(); jo.put("firstName", "Eslam"); jo.put("lastName", "Ashraf");
-//
-// JSONArray ja = new JSONArray(); ja.put(jo);
-//
-// mainObj = new JSONObject(); mainObj.put("employees", ja); } catch (Exception
-// e) { e.printStackTrace(); }
-//
-// // sending push notification PushService .subscribe(getBaseContext(),
-// "MyChannel", MainActivity.class); System.err.println(setOfAllSubscriptions);
-// ParsePush push = new ParsePush(); push.setChannel("MyChannel");
-// push.setMessage("Hello World From Channel"); push.setData(mainObj);
-//
-// // send push notification push.sendInBackground();
 

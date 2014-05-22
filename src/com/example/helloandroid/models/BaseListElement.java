@@ -1,4 +1,4 @@
-package com.example.helloandroid;
+package com.example.helloandroid.models;
 
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -11,8 +11,8 @@ public abstract class BaseListElement {
 	private int requestCode;
 	private BaseAdapter adapter;
 
-	protected abstract View.OnClickListener getOnAlarmClickListener();
-	protected abstract View.OnClickListener getOnMicClickListener();
+	public abstract View.OnClickListener getOnAlarmClickListener();
+	public abstract View.OnClickListener getOnMicClickListener();
 
 	public BaseListElement(String id, String text1, String text2,
 			int requestCode) {

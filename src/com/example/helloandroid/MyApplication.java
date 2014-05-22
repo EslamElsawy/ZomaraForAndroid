@@ -26,7 +26,7 @@ public class MyApplication extends Application {
 				"Successfully parsefacebook.initilize");
 
 		// for push notification
-		PushService.setDefaultPushCallback(this, MainActivity.class);
+		PushService.setDefaultPushCallback(this, SignInActivity.class);
 		Log.d(MY_APPLICATION,
 				"Successfully set default push bac");
 		ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {

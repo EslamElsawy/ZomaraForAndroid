@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:TabLayoutTutorial="http://schemas.android.com/apk/res-auto" >
+    <item android:id="@+id/Help"
+          android:title="Help"
+          android:icon="@drawable/help"
+          TabLayoutTutorial:showAsAction="always" />
+    <item android:id="@+id/Statistics"
+          android:title="Statistics"
+          android:icon="@drawable/statistics"
+          TabLayoutTutorial:showAsAction="always" />
+    <item android:id="@+id/Settings"
+          android:title="Settings"
+          android:icon="@drawable/settings"
+          TabLayoutTutorial:showAsAction="always" />
+</menu>
