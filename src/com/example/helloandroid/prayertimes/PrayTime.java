@@ -392,7 +392,7 @@ public class PrayTime {
 
     // -------------------- Interface Functions --------------------
     // return prayer times for a given date
-    private ArrayList<String> getDatePrayerTimes(int year, int month, int day,
+    public ArrayList<String> getDatePrayerTimes(int year, int month, int day,
             double latitude, double longitude, double tZone) {
         this.setLat(latitude);
         this.setLng(longitude);

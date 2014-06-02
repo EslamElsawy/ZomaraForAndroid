@@ -98,8 +98,15 @@ public class StatisticsActivity extends ActionBarActivity implements ActionBar.T
 			overridePendingTransition(0, 0);
 			return true;
 		} else if (id == R.id.Statistics) {
-			Toast toast = Toast.makeText(getApplicationContext(), "This is the current Tab" , Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(getApplicationContext(), "This is the current Tab", Toast.LENGTH_LONG);
 			toast.show();
+			return true;
+		} else if (id == R.id.Settings) {
+			Intent intent = new Intent(this, SettingsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			startActivity(intent);
+			overridePendingTransition(0, 0);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -120,7 +120,7 @@ public class SignInActivity extends Activity {
 	}
 
 	private void startFriendsActivity() {
-		Intent intent = new Intent(this, HelpActivity.class);
+		Intent intent = new Intent(this, CountriesActivity.class);
 		startActivity(intent);
 	}
 
