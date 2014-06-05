@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.helloandroid"
+    package="com.badit.zomara"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -23,20 +23,20 @@
   to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:name="com.example.helloandroid.permission.C2D_MESSAGE"
+        android:name="com.badit.zomara.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.helloandroid.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.badit.zomara.permission.C2D_MESSAGE" />
 
     <application
-        android:name="com.example.helloandroid.MyApplication"
+        android:name="com.badrit.zomara.activities.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat"
         android:uiOptions="splitActionBarWhenNarrow" >
         <activity
-            android:name="com.example.helloandroid.SignInActivity"
+            android:name="com.badrit.zomara.activities.SignInActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,10 +44,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.helloandroid.HelpActivity"
+            android:name="com.badrit.zomara.activities.HelpActivity"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name="com.example.helloandroid.StatisticsActivity"
+            android:name="com.badrit.zomara.activities.StatisticsActivity"
             android:theme="@style/Theme.AppCompat" />
 
         <service android:name="com.parse.PushService" />
@@ -59,10 +59,10 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.example.helloandroid.MyCustomReceiver"
+            android:name="com.badrit.zomara.activities.MyCustomReceiver"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.example.helloandroid.UPDATE_STATUS" />
+                <action android:name="com.badit.zomara.UPDATE_STATUS" />
             </intent-filter>
         </receiver>
         <receiver
@@ -73,7 +73,7 @@
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
                 <!-- IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
-                <category android:name="com.example.helloandroid" />
+                <category android:name="com.badit.zomara" />
             </intent-filter>
         </receiver>
 
@@ -84,11 +84,11 @@
         <activity android:name="com.facebook.LoginActivity" >
         </activity>
         <activity
-            android:name="com.example.helloandroid.AudioRecord"
+            android:name="com.badrit.zomara.activities.AudioRecord"
             android:label="@string/title_activity_audio_record" >
         </activity>
         <activity
-            android:name="com.example.helloandroid.CountriesActivity"
+            android:name="com.badrit.zomara.activities.CountriesActivity"
             android:label="Choose your country" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -99,7 +99,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.example.helloandroid.CitiesActivity"
+            android:name="com.badrit.zomara.activities.CitiesActivity"
             android:label="Choose your city" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -110,7 +110,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.example.helloandroid.SettingsActivity"
+            android:name="com.badrit.zomara.activities.SettingsActivity"
             android:label="Settings" >
         </activity>
     </application>
